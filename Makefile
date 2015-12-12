@@ -33,6 +33,11 @@ vol-down:
 	curl -s -i "http://$(dest)/messages" -H "X-Requested-With: curl" \
 		-d @./Panasonic-N2QAYB000919/vol-down.json
 
+vol-down-over-inet:
+	curl -s -i "http://api.getirkit.com/1/messages" \
+		-d "clientkey=`cat clientkey`" \
+		-d "deviceid=`cat deviceid`" \
+		-d "message=`cat Panasonic-N2QAYB000919/vol-down.json`"
 
 ##
 id:
@@ -40,3 +45,14 @@ id:
 
 ipaddr:
 	dns-sd -G v4 IRKitE30F.local
+
+keys:
+	curl -s -i "http://$(dest)/keys" -d '' -H "X-Requested-With: curl" | tee clienttoken.json
+
+deviceid:
+	curl -i -d "clienttoken=`cat clienttoken`" "https://api.getirkit.com/1/keys"
+
+door:
+	curl -s -i "http://api.getirkit.com/1/door" \
+		-d "clientkey=`cat clientkey`" \
+		-d "deviceid=`cat deviceid`"
